@@ -1,48 +1,7 @@
 <template>
   <div class="login-wrapper">
-    <img class="logo" :src="logo" />
-    <el-form
-      ref="login"
-      :rules="rules"
-      :model="form"
-      label-width="0"
-      style="width:100%;"
-      @keydown.enter.native="submit"
-    >
-      <!-- Github登录方式 -->
-      <el-form-item prop="userID">
-        <el-select v-model="form.userID" class="user-selector">
-          <el-option
-            v-for="index in 30"
-            :key="index"
-            :label="`user${index-1}`"
-            :value="`user${index-1}`"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- 线上版本登录方式 -->
-      <!-- <el-form-item prop="userID">
-        <el-input v-model="form.userID" placeholder="请输入用户名" type="text" clearable></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-          v-model="form.password"
-          placeholder="请输入密码"
-          type="password"
-          show-password
-          clearable
-        ></el-input>
-      </el-form-item>-->
-    </el-form>
-    <el-button
-      type="primary"
-      @click="submit"
-      style="width:100%; margin-top: 6px;"
-      :loading="loading"
-    >登录</el-button>
   </div>
 </template>
-
 <script>
 import { Form, FormItem, Select, Option } from 'element-ui'
 import logo from '../../assets/image/logo.png'
@@ -79,7 +38,19 @@ export default {
       loading: false
     }
   },
+  mounted() {
+    let user = this.getQueryString('user');
+    let userSig = this.getQueryString('userSig');
+    this.form.userID=user;
+    this.login();
+  },
   methods: {
+    getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return (r[2]);
+      return null;
+    },
     submit() {
       this.$refs['login'].validate(valid => {
         if (valid) {
@@ -114,7 +85,6 @@ export default {
   }
 }
 </script>
-
 <style lang="stylus" scoped>
 .login-wrapper {
   display: flex;
